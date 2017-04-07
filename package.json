@@ -1,0 +1,27 @@
+{
+  "name": "passport-bitbucket-token",
+  "version": "0.0.1",
+  "description": "Passport strategy for authenticating with Bitbucket access tokens using the OAuth 2.0 API.",
+  "main": "lib/index.js",
+  "scripts": {
+    "compile": "babel src --out-dir lib"
+  },
+  "keywords": [
+    "passport",
+    "bitbucket",
+    "auth",
+    "authn",
+    "authentication",
+    "identity"
+  ],
+  "author": "Ivan Vasiljevic",
+  "license": "MIT",
+  "dependencies": {
+    "passport-oauth": "1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.24.1"
+  }
+}
