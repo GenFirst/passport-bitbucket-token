@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/example/backend/node_modules
 
 # testing
 /coverage
