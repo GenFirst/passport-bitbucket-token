@@ -1,0 +1,25 @@
+{
+  "name": "passport-bitbucket-example",
+  "version": "1.0.0",
+  "description": "Example of passport-bitbucket-token usage",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start server.js --watch"
+  },
+  "author": "Ivan Vasiljevic",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cors": "^2.8.1",
+    "express": "^4.15.2",
+    "express-jwt": "^5.1.0",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.9.0",
+    "passport": "^0.3.2",
+    "passport-bitbucket-token": "0.0.1"
+  },
+  "devDependencies": {
+    "gulp": "~3.9.1",
+    "gulp-nodemon": "^2.2.1"
+  }
+}
