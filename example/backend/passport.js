@@ -8,7 +8,7 @@ module.exports = function () {
 
   passport.use(new BitbucketTokenStrategy({
       clientID: 'app-id',
-      clientSecret: 'secrete'
+      clientSecret: 'client-secret'
     },
     function (accessToken, refreshToken, profile, done) {
       User.upsertUser(accessToken, refreshToken, profile, function(err, user) {
