@@ -4,7 +4,7 @@
 
 [Passport](http://passportjs.org/) strategy for authenticating with [Bitbucket](https://bitbucket.org/) access tokens using the OAuth 2.0 API.
 
-Library is inspired by [passport-facebook-token]](https://github.com/drudge/passport-facebook-token).
+Library is inspired by [passport-facebook-token](https://github.com/drudge/passport-facebook-token).
 
 ## Installation
 
