@@ -1,6 +1,6 @@
 {
   "name": "passport-bitbucket-token",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Passport strategy for authenticating with Bitbucket access tokens using the OAuth 2.0 API.",
   "main": "lib/index.js",
   "scripts": {
