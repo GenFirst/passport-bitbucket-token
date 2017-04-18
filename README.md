@@ -1,5 +1,11 @@
 # passport-bitbucket-token
 
+[![NPM](https://nodei.co/npm/passport-bitbucket-token.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/passport-bitbucket-token/)
+
+[![Build Status](https://travis-ci.org/GenFirst/passport-bitbucket-token.svg?branch=master)](https://travis-ci.org/GenFirst/passport-bitbucket-token)
+[![Coverage Status](https://coveralls.io/repos/github/GenFirst/passport-bitbucket-token/badge.svg?branch=master)](https://coveralls.io/github/GenFirst/passport-bitbucket-token?branch=master)
+[![Dependency Status](https://gemnasium.com/badges/github.com/GenFirst/passport-bitbucket-token.svg)](https://gemnasium.com/github.com/GenFirst/passport-bitbucket-token)
+[![npm version](https://badge.fury.io/js/passport-bitbucket-token.svg)](https://badge.fury.io/js/passport-bitbucket-token)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 [Passport](http://passportjs.org/) strategy for authenticating with [Bitbucket](https://bitbucket.org/) access tokens using the OAuth 2.0 API.
