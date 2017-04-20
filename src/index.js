@@ -18,7 +18,7 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
     this._refreshTokenField = options.refreshTokenField || 'refresh_token';
     this._profileURL = options.profileURL || `https://api.bitbucket.org/1.0/user`;
     this._clientSecret = options.clientSecret;
-    this._passReqToCallback = options.passReqToCallback;
+    this._passReqToCallback = options.passReqToCallback || false;
     this._oauth2.useAuthorizationHeaderforGET(true);
   }
 

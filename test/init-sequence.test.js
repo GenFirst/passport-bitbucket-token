@@ -22,5 +22,9 @@ describe('BitbucketTokenStrategy:init', () => {
     assert.equal(strategy._oauth2._accessTokenUrl, 'https://bitbucket.org/site/oauth2/access_token');
     assert.equal(strategy._oauth2._authorizeUrl, 'https://bitbucket.org/site/oauth2/authorize');
     assert.equal(strategy._profileURL,`https://api.bitbucket.org/1.0/user`);
+    assert.equal(strategy._accessTokenField, 'access_token');
+    assert.equal(strategy._refreshTokenField, 'refresh_token');
+    assert.equal(strategy._passReqToCallback, false);
   });
+
 });

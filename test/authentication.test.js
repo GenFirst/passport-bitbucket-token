@@ -50,4 +50,85 @@ describe('BitbucketTokenStrategy:authenticate', () => {
       })
       .authenticate({});
   });
+
+  it('Should properly parse access_token from query', done => {
+    chai
+      .passport
+      .use(strategy)
+      .success(user => {
+        assert.typeOf(user, 'object');
+        done();
+      })
+      .req(req => {
+        req.query = {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token'
+        }
+      })
+      .authenticate({});
+  });
+
+  it('Should properly parse access token from OAuth2 bearer header', done => {
+    chai
+      .passport
+      .use(strategy)
+      .success(user => {
+        assert.typeOf(user, 'object');
+        done();
+      })
+      .req(req => {
+        req.headers = {
+          Authorization: 'Bearer access_token',
+          refresh_token: 'refresh_token'
+        }
+      })
+      .authenticate({});
+  });
+
+  it('Should properly parse access token from OAuth2 bearer header as lowercase', done => {
+    chai
+      .passport
+      .use(strategy)
+      .success(user => {
+        assert.typeOf(user, 'object');
+        done();
+      })
+      .req(req => {
+        req.headers = {
+          authorization: 'Bearer access_token',
+          refresh_token: 'refresh_token'
+        }
+      })
+      .authenticate({});
+  });
+
+  it('Should properly parse access token from access_token header', done => {
+    chai
+      .passport
+      .use(strategy)
+      .success(user => {
+        assert.typeOf(user, 'object');
+        done();
+      })
+      .req(req => {
+        req.headers = {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token'
+        }
+      })
+      .authenticate({});
+  });
+
+  it('Should fail if access_token is missing', done => {
+    chai
+      .passport
+      .use(strategy)
+      .fail(error => {
+        assert.typeOf(error, 'object');
+        assert.typeOf(error.message, 'string');
+        assert.deepEqual(error, { message: 'You should provide access_token' });
+        done();
+      })
+      .authenticate({});
+  });
 });
