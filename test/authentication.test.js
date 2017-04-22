@@ -191,16 +191,6 @@ describe('BitbucketTokrenStrategy:authentication with failure', () => {
 
   let strategy;
 
-  // improve fake profile with more data
-  const fakeProfile = {
-    user: {
-      username: 'john_doe',
-      first_name: 'John',
-      last_name: 'Doe',
-      avatar: 'https://bitbucket.org/account/john_doe/avatar/32/?ts=1492462087'
-    }
-  };
-
   before(() => {
     strategy = new BitbucketTokenStrategy({
       clientID: '123',
