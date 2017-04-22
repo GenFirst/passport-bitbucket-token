@@ -29,7 +29,7 @@ describe('BitbucketTokenStrategy:authenticate', () => {
       return next(null, profile);
     });
 
-    sinon.stub(strategy._oauth2, 'get', (url, accessToken, next) => next(null, fakeProfileString, null));
+    sinon.stub(strategy._oauth2, 'get').callsFake((url, accessToken, next) => next(null, fakeProfileString, null));
   });
 
   after(() => strategy._oauth2.get.restore());
@@ -167,7 +167,7 @@ describe('BitbucketTokrenStrategy:authentication with passReqToCallback', () => 
       return next(null, profile);
     });
 
-    sinon.stub(strategy._oauth2, 'get', (url, accessToken, next) => next(null, fakeProfileString, null));
+    sinon.stub(strategy._oauth2, 'get').callsFake((url, accessToken, next) => next(null, fakeProfileString, null));
   });
 
   after(() => strategy._oauth2.get.restore());
@@ -200,7 +200,6 @@ describe('BitbucketTokrenStrategy:authentication with failure', () => {
       avatar: 'https://bitbucket.org/account/john_doe/avatar/32/?ts=1492462087'
     }
   };
-  const fakeProfileString = JSON.stringify(fakeProfile);
 
   before(() => {
     strategy = new BitbucketTokenStrategy({
@@ -214,7 +213,7 @@ describe('BitbucketTokrenStrategy:authentication with failure', () => {
       return next(null, profile);
     });
 
-    sinon.stub(strategy, '_loadUserProfile', (accessToken, next) => next(new Error('Fatal error')));
+    sinon.stub(strategy, '_loadUserProfile').callsFake((accessToken, next) => next(new Error('Fatal error')));
   });
 
   after(() => strategy._loadUserProfile.restore());
@@ -232,6 +231,81 @@ describe('BitbucketTokrenStrategy:authentication with failure', () => {
           access_token: 'access_token',
           refresh_token: 'refresh_token'
         };
+      })
+      .authenticate({});
+  });
+});
+
+describe('BitbucketTokrenStrategy:authentication handling error in verify function', () => {
+
+  const fakeProfile = {
+    user: {
+      username: 'john_doe',
+      first_name: 'John',
+      last_name: 'Doe',
+      avatar: 'https://bitbucket.org/account/john_doe/avatar/32/?ts=1492462087'
+    }
+  };
+  const fakeProfileString = JSON.stringify(fakeProfile);
+
+  it('Should properly return error on verified', done => {
+    let strategy = new BitbucketTokenStrategy({
+      clientID: '123',
+      clientSecret: '123'
+    }, (accessToken, refreshToken, profile, next) => {
+      assert.equal(accessToken, 'access_token');
+      assert.equal(refreshToken, 'refresh_token');
+      assert.typeOf(profile, 'object');
+      assert.typeOf(next, 'function');
+      return next(new Error('Fatal error occured'));
+    });
+
+    sinon.stub(strategy._oauth2, 'get').callsFake((url, accessToken, next) => next(null, fakeProfileString));
+
+    chai
+      .passport
+      .use(strategy)
+      .error(error => {
+        assert.instanceOf(error, Error);
+        strategy._oauth2.get.restore();
+        done();
+      })
+      .req(req => {
+        req.body = {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token'
+        }
+      })
+      .authenticate({});
+  });
+
+  it('Should properly return failure information', done => {
+    let strategy = new BitbucketTokenStrategy({
+      clientID: '123',
+      clientSecret: '123'
+    }, (accessToken, refreshToken, profile, next) => {
+      assert.equal(accessToken, 'access_token');
+      assert.equal(refreshToken, 'refresh_token');
+      assert.typeOf(profile, 'object');
+      assert.typeOf(next, 'function');
+      return next(null, null, 'Profile cannot be loaded');
+    });
+
+    sinon.stub(strategy._oauth2, 'get').callsFake((url, accessToken, next) => next(null, fakeProfileString));
+
+    chai
+      .passport
+      .use(strategy)
+      .fail(failureInfo => {
+        assert.equal(failureInfo, 'Profile cannot be loaded');
+        strategy._oauth2.get.restore();
+        done();
+      })
+      .req(req => {
+        req.body = {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token'
+        }
       })
       .authenticate({});
   });

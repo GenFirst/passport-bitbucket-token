@@ -7,7 +7,6 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
     const options = _options || {};
     const verify = _verify;
 
-
     options.authorizationURL = options.authorizationURL || 'https://bitbucket.org/site/oauth2/authorize';
     options.tokenURL = options.tokenURL || 'https://bitbucket.org/site/oauth2/access_token';
 
