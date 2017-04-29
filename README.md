@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/GenFirst/passport-bitbucket-token.svg?branch=master)](https://travis-ci.org/GenFirst/passport-bitbucket-token)
 [![Coverage Status](https://coveralls.io/repos/github/GenFirst/passport-bitbucket-token/badge.svg?branch=master)](https://coveralls.io/github/GenFirst/passport-bitbucket-token?branch=master)
 [![Dependency Status](https://gemnasium.com/badges/github.com/GenFirst/passport-bitbucket-token.svg)](https://gemnasium.com/github.com/GenFirst/passport-bitbucket-token)
+[![Code Climate](https://codeclimate.com/github/GenFirst/passport-bitbucket-token/badges/gpa.svg)](https://codeclimate.com/github/GenFirst/passport-bitbucket-token)
 [![npm version](https://badge.fury.io/js/passport-bitbucket-token.svg)](https://badge.fury.io/js/passport-bitbucket-token)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
