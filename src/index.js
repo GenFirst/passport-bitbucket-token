@@ -1,3 +1,5 @@
+'use strict';
+
 import uri from 'url';
 import { OAuth2Strategy, InternalOAuthError } from 'passport-oauth';
 
@@ -7,15 +9,16 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
     const options = _options || {};
     const verify = _verify;
 
-    options.authorizationURL = options.authorizationURL || 'https://bitbucket.org/site/oauth2/authorize';
-    options.tokenURL = options.tokenURL || 'https://bitbucket.org/site/oauth2/access_token';
+    options.authorizationURL = 'https://bitbucket.org/site/oauth2/authorize';
+    options.tokenURL = 'https://bitbucket.org/site/oauth2/access_token';
 
     super(options, verify);
 
     this.name = 'bitbucket-token';
+    this.apiVersion = options.apiVersion || '1.0';
     this._accessTokenField = options.accessTokenField || 'access_token';
     this._refreshTokenField = options.refreshTokenField || 'refresh_token';
-    this._profileURL = options.profileURL || `https://api.bitbucket.org/1.0/user`;
+    this._profileURL = `https://api.bitbucket.org/${this.apiVersion}/user`;
     this._clientSecret = options.clientSecret;
     this._passReqToCallback = options.passReqToCallback || false;
     this._oauth2.useAuthorizationHeaderforGET(true);
@@ -54,24 +57,41 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
       try {
         const json = JSON.parse(body);
 
-        const profile = {
-          provider: 'bitbucket',
-          id: json.user.username,
-          username: json.user.username,
-          name: {
-            first_name: json.user.first_name || '',
-            last_name: json.user.last_name || ''
-          },
-          avatar:  json.user.avatar,
-          _raw: body,
-          _json: json
-        };
+        const profile = this.apiVersion === '1.0' ? this.parseV1Profile(json, body) : this.parseV2Profile(json, body);
 
         done(null, profile);
       } catch (e) {
         done(e);
       }
     });
+  }
+
+  parseV1Profile(bitbucketProfile, rawProfile) {
+    return {
+      provider: 'bitbucket',
+      id: bitbucketProfile.user.username,
+      username: bitbucketProfile.user.username,
+      name: {
+        first_name: bitbucketProfile.user.first_name,
+        last_name: bitbucketProfile.user.last_name
+      },
+      avatar:  bitbucketProfile.user.avatar,
+      _raw: rawProfile,
+      _json: bitbucketProfile
+    };
+  }
+
+  parseV2Profile(bitbucketProfile, rawProfile) {
+    console.log(bitbucketProfile);
+    return {
+      provider: 'bitbucket',
+      id: bitbucketProfile.user.uuid,
+      username: bitbucketProfile.user.username,
+      display_name: bitbucketProfile.user.display_name,
+      avatar:  bitbucketProfile.user.links.avatar.href,
+      _raw: rawProfile,
+      _json: bitbucketProfile
+    };
   }
 
   parseOAuth2Token(req) {

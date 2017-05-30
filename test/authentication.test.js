@@ -1,3 +1,5 @@
+'use strict';
+
 import chai, { assert } from 'chai';
 import sinon from 'sinon';
 import BitbucketTokenStrategy from '../src/index';
