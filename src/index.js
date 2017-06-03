@@ -82,13 +82,12 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
   }
 
   parseV2Profile(bitbucketProfile, rawProfile) {
-    console.log(bitbucketProfile);
     return {
       provider: 'bitbucket',
-      id: bitbucketProfile.user.uuid,
-      username: bitbucketProfile.user.username,
-      display_name: bitbucketProfile.user.display_name,
-      avatar:  bitbucketProfile.user.links.avatar.href,
+      id: bitbucketProfile.uuid,
+      username: bitbucketProfile.username,
+      display_name: bitbucketProfile.display_name,
+      avatar:  bitbucketProfile.links.avatar.href,
       _raw: rawProfile,
       _json: bitbucketProfile
     };
