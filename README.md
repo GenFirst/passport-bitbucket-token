@@ -21,7 +21,8 @@ Library is inspired by [passport-facebook-token](https://github.com/drudge/passp
 
 ### Configure Strategy
 
-The Bitbucket authentication strategy authenticate users using Bitbucket account and OAuthe 2 tokens. The strategy requires two parameters `options` and `verify` callback. `options` are used to configure strategy. `verify` callback is function that accepts 4 arguments: `accessToken`, `refreshToken`, `profile`, `done`. `profile` is parsed Bitbucket profile. `done` is method which is called with user when `verify` method is finished. 
+The Bitbucket authentication strategy authenticate users using Bitbucket account and OAuthe 2 tokens. The strategy requires two parameters: `options` and `verify` callback. 
+`options` are used to configure strategy. `verify` callback is function that accepts 4 arguments: `accessToken`, `refreshToken`, `profile`, `done`. `profile` is parsed Bitbucket profile. `done` is method which is called with user when `verify` method is finished. 
 
 ```js
 var BitbucketTokenStrategy = require('passport-bitbucket-token');
