@@ -21,6 +21,8 @@ Library is inspired by [passport-facebook-token](https://github.com/drudge/passp
 
 ### Configure Strategy
 
+The Bitbucket authentication strategy authenticate users using Bitbucket account and OAuthe 2 tokens. The strategy requires two parameters `options` and `verify` callback. `options` are used to configure strategy. `verify` callback is function that accepts 4 arguments: `accessToken`, `refreshToken`, `profile`, `done`. `profile` is parsed Bitbucket profile. `done` is method which is called with user when `verify` method is finished. 
+
 ```js
 var BitbucketTokenStrategy = require('passport-bitbucket-token');
 
@@ -34,6 +36,13 @@ passport.use(new BitbucketTokenStrategy({
       });
     }));
 ```
+#### Options
+
+* `apiVersion` - Which version of Bitbucket API user want to use. Allowed values are [1.0](https://confluence.atlassian.com/bitbucket/user-endpoint-296092264.html) or [2.0](https://developer.atlassian.com/bitbucket/api/2/reference/resource/user).
+* `accessTokenField` - Name of HTTP header, body field or query parameter where access token is stored in request
+* `refreshTokenField` - Name of HTTP header, body field or query parameter where refresh token is stored in request
+* `passReqToCallback` - Should `verify` function received as first parameter `req` object
+
 
 ### Authenticate User
 
@@ -46,6 +55,28 @@ router.route('/auth/bitbucket')
 
     res.send(200);
   });
+```
+### Client Requests
+
+#### Sending access_token as a Query parameter
+
+```GET /auth/bitbucket?access_token=<TOKEN>```
+
+#### Sending access token as an HTTP header
+
+```
+GET /auth/bitbucket HTTP/1.1
+Host: example.com
+Authorization: Bearer base64_access_token_string
+```
+
+#### Sending access token as an HTTP body
+
+```
+POST /auth/bitbucket HTTP/1.1
+Host: example.com
+
+access_token=base64_access_token_string
 ```
 
 # License
