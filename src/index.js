@@ -15,10 +15,11 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
     super(options, verify);
 
     this.name = 'bitbucket-token';
-    this.apiVersion = options.apiVersion || '1.0';
+    this._apiVersion = options.apiVersion || '1.0';
+    this._profileWithEmail = options.profileWithEmail || false;
     this._accessTokenField = options.accessTokenField || 'access_token';
     this._refreshTokenField = options.refreshTokenField || 'refresh_token';
-    this._profileURL = `https://api.bitbucket.org/${this.apiVersion}/user`;
+    this._profileURL = `https://api.bitbucket.org/${this._apiVersion}/user`;
     this._clientSecret = options.clientSecret;
     this._passReqToCallback = options.passReqToCallback || false;
     this._oauth2.useAuthorizationHeaderforGET(true);
@@ -48,6 +49,31 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
     });
   }
 
+  loadUserMail(accessToken, accountName, done) {
+    const emailUrlPath = this._apiVersion === '2.0' ? 'https://api.bitbucket.org/2.0/user/emails' : `https://api.bitbucket.org/1.0/users/${accountName}/emails`;
+    const emailUrl = uri.parse(emailUrlPath);
+
+    this._oauth2.get(emailUrl, accessToken, (error, body, res) => {
+      if (error) return done(new InternalOAuthError('Failed to fetch user profile', error));
+
+      try {
+        const json = JSON.parse(body);
+
+        return this._apiVersion === '2.0' ? this.parseV2Emails(json) : this.parseV1Emails(json);
+      } catch (e) {
+        done(e);
+      }
+    });
+  }
+
+  parseV1Emails(body) {
+    return body.map(email => {return { value: email.email, primary: email.primary, verified: email.active }; });
+  }
+
+  parseV2Emails(body) {
+    return body.values.map(email => { return {value: email.email, primary: email.is_primary, verified: email.is_confirmed}; });
+  }
+
   userProfile(accessToken, done) {
     let profileURL = uri.parse(this._profileURL);
 
@@ -57,7 +83,11 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
       try {
         const json = JSON.parse(body);
 
-        const profile = this.apiVersion === '1.0' ? this.parseV1Profile(json, body) : this.parseV2Profile(json, body);
+        const profile = this._apiVersion === '1.0' ? this.parseV1Profile(json, body) : this.parseV2Profile(json, body);
+
+        if (this._profileWithEmail) {
+          profile.emails = this.loadUserMail(accessToken, profile.username, done);
+        }
 
         done(null, profile);
       } catch (e) {
