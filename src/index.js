@@ -2,6 +2,8 @@
 
 import uri from 'url';
 import { OAuth2Strategy, InternalOAuthError } from 'passport-oauth';
+import v1parser from './parsers/v1.profile.parsing';
+import v2parser from './parsers/v2.profile.parsing';
 
 export default class BitbucketTokenStrategy extends OAuth2Strategy {
 
@@ -49,7 +51,7 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
     });
   }
 
-  loadUserMail(accessToken, accountName, done) {
+  loadUserMail(accessToken, accountName, profile, done) {
     const emailUrlPath = this._apiVersion === '2.0' ? 'https://api.bitbucket.org/2.0/user/emails' : `https://api.bitbucket.org/1.0/users/${accountName}/emails`;
     const emailUrl = uri.parse(emailUrlPath);
 
@@ -59,19 +61,13 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
       try {
         const json = JSON.parse(body);
 
-        return this._apiVersion === '2.0' ? this.parseV2Emails(json) : this.parseV1Emails(json);
+        profile.emails = this._apiVersion === '2.0' ? v2parser.emails(json) : v1parser.emails(json);
+        console.log(profile);
+        done(null, profile);
       } catch (e) {
         done(e);
       }
     });
-  }
-
-  parseV1Emails(body) {
-    return body.map(email => {return { value: email.email, primary: email.primary, verified: email.active }; });
-  }
-
-  parseV2Emails(body) {
-    return body.values.map(email => { return {value: email.email, primary: email.is_primary, verified: email.is_confirmed}; });
   }
 
   userProfile(accessToken, done) {
@@ -83,44 +79,17 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
       try {
         const json = JSON.parse(body);
 
-        const profile = this._apiVersion === '1.0' ? this.parseV1Profile(json, body) : this.parseV2Profile(json, body);
+        const profile = this._apiVersion === '1.0' ? v1parser.profile(json, body) : v2parser.profile(json, body);
 
         if (this._profileWithEmail) {
-          profile.emails = this.loadUserMail(accessToken, profile.username, done);
+          return this.loadUserMail(accessToken, profile.username, profile, done);
         }
 
-        done(null, profile);
+        return done(null, profile);
       } catch (e) {
-        done(e);
+        return done(e);
       }
     });
-  }
-
-  parseV1Profile(bitbucketProfile, rawProfile) {
-    return {
-      provider: 'bitbucket',
-      id: bitbucketProfile.user.username,
-      username: bitbucketProfile.user.username,
-      name: {
-        first_name: bitbucketProfile.user.first_name,
-        last_name: bitbucketProfile.user.last_name
-      },
-      avatar:  bitbucketProfile.user.avatar,
-      _raw: rawProfile,
-      _json: bitbucketProfile
-    };
-  }
-
-  parseV2Profile(bitbucketProfile, rawProfile) {
-    return {
-      provider: 'bitbucket',
-      id: bitbucketProfile.uuid,
-      username: bitbucketProfile.username,
-      display_name: bitbucketProfile.display_name,
-      avatar:  bitbucketProfile.links.avatar.href,
-      _raw: rawProfile,
-      _json: bitbucketProfile
-    };
   }
 
   parseOAuth2Token(req) {
