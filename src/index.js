@@ -52,7 +52,7 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
   }
 
   loadUserMail(accessToken, accountName, profile, done) {
-    const emailUrlPath = this._apiVersion === '2.0' ? 'https://api.bitbucket.org/2.0/user/emails' : `https://api.bitbucket.org/1.0/users/${accountName}/emails`;
+    const emailUrlPath = this.isApiV1() ? `https://api.bitbucket.org/1.0/users/${accountName}/emails` : 'https://api.bitbucket.org/2.0/user/emails';
     const emailUrl = uri.parse(emailUrlPath);
 
     this._oauth2.get(emailUrl, accessToken, (error, body, res) => {
@@ -60,14 +60,17 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
 
       try {
         const json = JSON.parse(body);
+        profile.emails = this.isApiV1() ? v1parser.emails(json) : v2parser.emails(json);
 
-        profile.emails = this._apiVersion === '2.0' ? v2parser.emails(json) : v1parser.emails(json);
-        console.log(profile);
         done(null, profile);
       } catch (e) {
         done(e);
       }
     });
+  }
+
+  isApiV1() {
+    return this._apiVersion === '1.0';
   }
 
   userProfile(accessToken, done) {
@@ -79,7 +82,7 @@ export default class BitbucketTokenStrategy extends OAuth2Strategy {
       try {
         const json = JSON.parse(body);
 
-        const profile = this._apiVersion === '1.0' ? v1parser.profile(json, body) : v2parser.profile(json, body);
+        const profile = this.isApiV1() ? v1parser.profile(json, body) : v2parser.profile(json, body);
 
         if (this._profileWithEmail) {
           return this.loadUserMail(accessToken, profile.username, profile, done);
