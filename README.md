@@ -43,7 +43,7 @@ passport.use(new BitbucketTokenStrategy({
 * `accessTokenField` - Name of HTTP header, body field or query parameter where access token is stored in request
 * `refreshTokenField` - Name of HTTP header, body field or query parameter where refresh token is stored in request
 * `passReqToCallback` - Should `verify` function received as first parameter `req` object
-
+* `profileWithEmail` - If `true` library will try to load profile with all emails that are associated with profile. `email` is scope that is required. If nothing is selected emails will not be loaded.
 
 ### Authenticate User
 
