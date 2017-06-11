@@ -89,10 +89,10 @@ var authenticate = expressJwt({
 var getCurrentUser = function(req, res, next) {
   User.findById(req.auth.id, function(err, user) {
     if (err) {
-      next(err);
+      return next(err);
     } else {
       req.user = user;
-      next();
+      return next();
     }
   });
 };
