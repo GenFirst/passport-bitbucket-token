@@ -80,6 +80,46 @@ Host: example.com
 access_token=base64_access_token_string
 ```
 
+### Profile examples
+
+In this section we will show examples of parsed profile that are returned to `verify` callback.
+
+#### Bitbucket API v1.0
+
+```js
+{ 
+  provider: 'bitbucket',
+  id: 'john_doe',
+  username: 'john_doe',
+  name: { first_name: 'John', last_name: 'Doe' },
+  emails: [{value: 'test@example.com', primary: true, verified: true}]
+  avatar: 'https://bitbucket.org/account/john_doe/avatar/32/?ts=1492462087',
+  _raw: 'raw json object from Bitbucket server',
+  _json: 
+   { 
+     'parsed json object from server''
+   }
+}
+```
+
+#### Bitbucket API v2.0
+
+```js
+{ 
+  provider: 'bitbucket',
+  id: 'john_doe',
+  username: 'john_doe',
+  display_name: 'John Doe',
+  emails: [{value: 'test@example.com', primary: true, verified: true}]
+  avatar: 'https://bitbucket.org/account/john_doe/avatar/32/?ts=1492462087',
+  _raw: 'raw json object from Bitbucket server',
+  _json: 
+   { 
+     'parsed json object from server''
+   }
+}
+```
+
 # License
 
 passport-bitbucket-token is released under [MIT License](https://opensource.org/licenses/MIT).
