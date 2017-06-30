@@ -97,7 +97,7 @@ In this section we will show examples of parsed profile that are returned to `ve
   _raw: 'raw json object from Bitbucket server',
   _json: 
    { 
-     'parsed json object from server''
+     'parsed json object from server'
    }
 }
 ```
@@ -115,7 +115,7 @@ In this section we will show examples of parsed profile that are returned to `ve
   _raw: 'raw json object from Bitbucket server',
   _json: 
    { 
-     'parsed json object from server''
+     'parsed json object from server'
    }
 }
 ```
