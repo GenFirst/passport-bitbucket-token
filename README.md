@@ -120,6 +120,12 @@ In this section we will show examples of parsed profile that are returned to `ve
 }
 ```
 
+# Examples
+
+Example of server application can be found [here](https://github.com/GenFirst/passport-bitbucket-token/tree/master/example/backend).
+
+Full example of React.js + Node.js/Express.js can be found [here](https://github.com/GenFirst/react-node-bitbucket-login).
+
 # License
 
 passport-bitbucket-token is released under [MIT License](https://opensource.org/licenses/MIT).
